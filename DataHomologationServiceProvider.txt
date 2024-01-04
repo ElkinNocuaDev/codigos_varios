@@ -1,0 +1,47 @@
+
+
+
+
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class DataHomologationServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // Aquí puedes realizar la lógica de homologación de datos
+
+        // Ejemplo: Obtener datos de la tabla correos_responsables de la base de datos antigua
+        $oldData = \DB::connection('old_database_connection')->table('correos_responsables')->get();
+
+        // Iterar sobre los datos y almacenarlos en la nueva base de datos
+        foreach ($oldData as $record) {
+            \DB::connection('new_database_connection')->table('correos_responsables')->updateOrInsert(
+                ['id' => $record->id], // Clave primaria o algún otro campo único
+                [
+                    'campo1' => $record->campo1,
+                    'campo2' => $record->campo2,
+                    // Agrega aquí los demás campos que desees homologar
+                ]
+            );
+        }
+    }
+
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}
